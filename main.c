@@ -42,14 +42,24 @@ int main(void) {
         printf("client_fd: %d\n", client_fd);
 
         // TODO: リクエスト情報から取得したパス、クエリのバリデーション・取得
-        char buf[1024];
-        ssize_t n = recv(client_fd, buf, sizeof(buf), 0);
+        char request[1024];
+        ssize_t n = recv(client_fd, request, sizeof(request), 0);
         if (n > 0) {
-            buf[n] = '\0';
+            request[n] = '\0';
         }
-        printf("=== request ===\n%s\n", buf);
+        printf("=== request ===\n%s\n", request);
 
-        // TODO: HTTPレスポンス返す
+        // TODO: 足し算した結果を返すように修正
+        const char *response_body = "Hello, world!\n";
+        char response[512];
+        int len = snprintf(response, sizeof(response),
+            "HTTP/1.1 200 OK\r\n"
+            "Content-Type: text/plain; charset=utf8\r\n"
+            "Content-Length: %zu\r\n"
+            "\r\n"
+            "%s",
+            strlen(response_body), response_body);
+        send(client_fd, response, len, 0);
 
         // close
         close(client_fd);
