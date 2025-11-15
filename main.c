@@ -41,7 +41,15 @@ int main(void) {
         client_fd = accept_result;
         printf("client_fd: %d\n", client_fd);
 
-        // TODO: クライアントとのデータのやり取り実装
+        // TODO: リクエスト情報から取得したパス、クエリのバリデーション・取得
+        char buf[1024];
+        ssize_t n = recv(client_fd, buf, sizeof(buf), 0);
+        if (n > 0) {
+            buf[n] = '\0';
+        }
+        printf("=== request ===\n%s\n", buf);
+
+        // TODO: HTTPレスポンス返す
 
         // close
         close(client_fd);
